@@ -10,11 +10,14 @@ class MainApp extends StatelessWidget{
     return MaterialApp(
       home: CadastroPage(),
       theme: ThemeData(
-        scaffoldBackgroundColor: Color.fromRGBO(50, 52, 55, 100),
+        scaffoldBackgroundColor: Color.fromRGBO(50, 52, 55, 1),
         // fontFamily: GoogleFonts.jetBrainsMono()
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         textTheme: TextTheme(bodyMedium: GoogleFonts.jetBrainsMono(color: Colors.white)),
-        hintColor: Color.fromRGBO(100, 102, 105, 100),
+        hintColor: Color.fromRGBO(100, 102, 105, 1),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Color.fromRGBO(226, 183, 20, 1)
+        )
       ),
     );
   }
