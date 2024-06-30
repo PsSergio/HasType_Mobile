@@ -8,14 +8,14 @@ class MainApp extends StatelessWidget{
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
-      home: CadastroPage(),
+      home: const CadastroPage(),
       theme: ThemeData(
-        scaffoldBackgroundColor: Color.fromRGBO(50, 52, 55, 1),
+        scaffoldBackgroundColor: const Color.fromRGBO(50, 52, 55, 1),
         // fontFamily: GoogleFonts.jetBrainsMono()
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-        textTheme: TextTheme(bodyMedium: GoogleFonts.jetBrainsMono(color: Colors.white)),
-        hintColor: Color.fromRGBO(100, 102, 105, 1),
-        textSelectionTheme: TextSelectionThemeData(
+        textTheme: const TextTheme(bodyMedium: TextStyle(fontFamily: 'JetBrainsMono', color: Colors.white)),
+        hintColor: const Color.fromRGBO(100, 102, 105, 1),
+        textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Color.fromRGBO(226, 183, 20, 1)
         )
       ),

@@ -4,19 +4,19 @@ import 'package:google_fonts/google_fonts.dart';
 
 class TextDefault extends StatelessWidget{
  
-  @override
-
   final String text;
   final double fontSize;
 
   const TextDefault({super.key, required this.text, required this.fontSize});
 
+  @override
   Widget build(BuildContext context) {
     return Text(
     text,
     style:
-    GoogleFonts.jetBrainsMono(
+    TextStyle(
       // color: Colors.white,
+      fontFamily: 'JetBrainsMono',
       fontSize: fontSize,
       fontWeight: FontWeight.bold
     ), 
