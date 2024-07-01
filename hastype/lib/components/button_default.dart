@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hastype/repositories/user_repository.dart';
 
 class ButtonDefault extends StatelessWidget {
   const ButtonDefault({super.key, required this.text});
@@ -8,7 +9,10 @@ class ButtonDefault extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: null,
+      onPressed: () {
+        UserRepository repository = UserRepository(); 
+        repository.postUser("João Paulo", "joaopaulo@gmail.com", "joaoPaulo123");
+      },
       style: TextButton.styleFrom(
         textStyle: const TextStyle(
           
