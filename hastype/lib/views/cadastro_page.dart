@@ -17,6 +17,7 @@ class _CadastroPageState extends State<CadastroPage> {
 
   String errorMsg = "";
   bool errorIsVisible = false;
+  bool loadingIsVisible = false;
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -26,58 +27,17 @@ class _CadastroPageState extends State<CadastroPage> {
     return Container();
   }
 
-  _error(bool isVisible, String errorMsg) {
-    print("start: $isVisible");
+  _loading(bool isVisible) {
     return Visibility(
       visible: isVisible,
       child: SizedBox(
-        width: 400,
-        height: double.infinity,
-        child: Container(
-          color: const Color.fromARGB(171, 41, 41, 41),
-          alignment: Alignment.bottomCenter,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: 150,
-                child: Align(
-                  alignment: const FractionalOffset(0.9, 0.5),
-                  child: IconButton(
-                    icon: const Icon(Icons.close_rounded,
-                        color: Colors.white, size: 50),
-                    onPressed: () {
-                      setState(() {
-                        isVisible = false;
-
-                        print("old: $isVisible");
-                        print(isVisible);
-                      });
-                    },
-                  ),
-                ),
-              ),
-              Container(
-                height: 100,
-                color: const Color.fromARGB(255, 238, 99, 89),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        errorMsg,
-                        style: const TextStyle(fontSize: 20),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      width: 400,
+      height: double.infinity,
+      child: Container(
+        color: const Color.fromARGB(171, 41, 41, 41),
+        child: const Center(child: CircularProgressIndicator()),
       ),
-    );
+    ));
   }
 
   @override
@@ -144,13 +104,19 @@ class _CadastroPageState extends State<CadastroPage> {
                       if (nameController.text != "" &&
                           emailController.text != "" &&
                           senhaController.text != "") {
-                        final results = await cadastroController.start(
-                            CadastroUserDto(
-                                nome: nameController.text,
-                                email: emailController.text,
-                                senha: senhaController.text));
 
                         setState(() {
+                          loadingIsVisible = true;
+                        });
+
+                        await cadastroController.start(CadastroUserDto(
+                            nome: nameController.text,
+                            email: emailController.text,
+                            senha: senhaController.text));
+
+                        setState(() {
+                          loadingIsVisible = false;
+
                           if (cadastroController.state ==
                               CadastroStatus.emailExists) {
                             errorMsg = "Este email já está cadastrado!";
@@ -213,7 +179,8 @@ class _CadastroPageState extends State<CadastroPage> {
               ),
             ),
           ),
-        )
+        ),
+        _loading(loadingIsVisible)
       ]),
     );
   }

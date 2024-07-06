@@ -11,9 +11,13 @@ class CadastroController{
     state = CadastroStatus.loading;
     
     try{
-      final response = await UserRepository().postUser(model);
+        print("loading");
+
+        final response = await UserRepository().postUser(model);
       
         state = CadastroStatus.created;
+        print("created");
+        
         return response;
       
     }on DioException catch(e){
@@ -23,7 +27,11 @@ class CadastroController{
       }else if(e.type == DioExceptionType.connectionError){
         state = CadastroStatus.noInternet;
         return "Falha na conecção. Tente novamente!";
+        
       }
+        print(e.toString());
+
+      
 
     }
 
