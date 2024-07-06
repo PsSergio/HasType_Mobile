@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 class InputBox extends StatelessWidget {
 
   final String text;
+
+  final TextEditingController controller;
   
-  const InputBox({super.key, required this.text});
+  const InputBox({super.key, required this.text, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-        
+        controller: controller,
         style: const TextStyle(
           fontFamily: "JetBrainsMono",
           color: Color.fromRGBO(100, 102, 105, 100),

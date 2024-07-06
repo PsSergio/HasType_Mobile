@@ -4,17 +4,15 @@ import 'package:hastype/data/dtos/cadastro_user_dto.dart';
 import 'package:hastype/data/repositories/user_repository.dart';
 
 class ButtonDefault extends StatelessWidget {
-  const ButtonDefault({super.key, required this.text});
+  const ButtonDefault({super.key, required this.text, required this.onPressed});
 
+  final Function() onPressed; 
   final String text;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {
-        CadastroController controller = CadastroController(); 
-        print(controller.start(CadastroUserDto(nome: "João Paulo2", email: "joaopaulo252@gmail.com", senha: "joaoPaulo123")).toString());
-      },
+      onPressed: onPressed,
       style: TextButton.styleFrom(
         textStyle: const TextStyle(
           
@@ -23,11 +21,11 @@ class ButtonDefault extends StatelessWidget {
           fontSize: 25,
           ) ,
         backgroundColor: Colors.white,
-        padding: EdgeInsets.all(20),
-        fixedSize: Size(300, 70),
+        padding: const EdgeInsets.all(20),
+        fixedSize: const Size(300, 70),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
-      child: Text(text, style: TextStyle(color: Color.fromRGBO(50, 52, 55, 1))),
+      child: Text(text, style: const TextStyle(color: Color.fromRGBO(50, 52, 55, 1))),
     );
   }
 }

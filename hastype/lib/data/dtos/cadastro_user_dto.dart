@@ -1,5 +1,3 @@
-import 'package:hastype/models/user_model.dart';
-
 class CadastroUserDto{
 
   final String nome;
@@ -19,6 +17,4 @@ class CadastroUserDto{
         "nome": nome,
         "senha": senha,
     };
-
-
 }

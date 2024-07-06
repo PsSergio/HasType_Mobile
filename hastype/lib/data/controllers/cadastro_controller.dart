@@ -11,12 +11,10 @@ class CadastroController{
     state = CadastroStatus.loading;
     
     try{
-      Response response = await UserRepository().postUser(model);
+      final response = await UserRepository().postUser(model);
       
-      if(response.statusCode == 200){
         state = CadastroStatus.created;
-        return UserModel.fromJson(response.data);
-      }
+        return response;
       
     }on DioException catch(e){
       if(e.type == DioExceptionType.badResponse){
