@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hastype/components/button_default.dart';
 import 'package:hastype/components/input_box.dart';
+import 'package:hastype/components/loading_component.dart';
 import 'package:hastype/components/text_default.dart';
 import 'package:hastype/data/controllers/cadastro_controller.dart';
 import 'package:hastype/data/dtos/cadastro_user_dto.dart';
@@ -23,19 +24,6 @@ class _CadastroPageState extends State<CadastroPage> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final senhaController = TextEditingController();
-
-  _loading(bool isVisible) {
-    return Visibility(
-        visible: isVisible,
-        child: SizedBox(
-          width: 400,
-          height: double.infinity,
-          child: Container(
-            color: const Color.fromARGB(171, 41, 41, 41),
-            child: const Center(child: CircularProgressIndicator()),
-          ),
-        ));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +93,7 @@ class _CadastroPageState extends State<CadastroPage> {
                           loadingIsVisible = true;
                         });
 
-                        await cadastroController.start(CadastroUserDto(
+                        final response = await cadastroController.start(CadastroUserDto(
                             nome: nameController.text.trim(),
                             email: emailController.text.trim(),
                             senha: senhaController.text.trim()));
@@ -123,7 +111,7 @@ class _CadastroPageState extends State<CadastroPage> {
                             errorIsVisible = true;
                           } else if (cadastroController.state ==
                               CadastroStatus.created) {
-                            Navigator.push(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const HomePage()));
@@ -182,7 +170,7 @@ class _CadastroPageState extends State<CadastroPage> {
             ),
           ),
         ),
-        _loading(loadingIsVisible)
+        LoadingComponent(isVisible: loadingIsVisible)
       ]),
     );
   }

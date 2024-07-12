@@ -7,30 +7,42 @@ import 'package:hastype/data/repositories/user_repository.dart';
 class LoginController {
   LoginStates state = LoginStates.start;
 
-  Future start(LoginUserDto model) async {
+  Future<dynamic> start(LoginUserDto model) async {
+    SuperLoginStates superState = SuperLoginStates.sucess;
     state = LoginStates.loading;
 
-    try {
-      final response = await UserRepository().singinUser(model);
 
-      print(response);
+    try{
+      final response = await UserRepository().singinUser(model);
 
       state = LoginStates.logged;
 
       return response;
+
     } on DioException catch (e) {
-      if (e.response?.statusCode == 200) {
+        print(e.response?.statusCode);
+
+      if (e.response?.statusCode == 401) {
         state = LoginStates.userAlreadyLogged;
         return e.response?.data;
       } else if (e.response?.statusCode == 404) {
         state = LoginStates.dataInvalid;
         return e.response?.data;
-      } else if (e.type == DioExceptionType.connectionError) {
+      } else if ( e.type == DioExceptionType.connectionError) {
         state = LoginStates.noInternet;
         return "Falha na conecção. Tente novamente!";
       }
+
+      superState = SuperLoginStates.error;
     }
+    print(superState);
+    print(state);
   }
+}
+
+enum SuperLoginStates{
+  sucess, 
+  error
 }
 
 enum LoginStates {
