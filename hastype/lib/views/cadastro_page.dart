@@ -4,6 +4,7 @@ import 'package:hastype/components/input_box.dart';
 import 'package:hastype/components/text_default.dart';
 import 'package:hastype/data/controllers/cadastro_controller.dart';
 import 'package:hastype/data/dtos/cadastro_user_dto.dart';
+import 'package:hastype/views/home_page.dart';
 
 class CadastroPage extends StatefulWidget {
   const CadastroPage({super.key});
@@ -23,21 +24,17 @@ class _CadastroPageState extends State<CadastroPage> {
   final emailController = TextEditingController();
   final senhaController = TextEditingController();
 
-  _start() {
-    return Container();
-  }
-
   _loading(bool isVisible) {
     return Visibility(
-      visible: isVisible,
-      child: SizedBox(
-      width: 400,
-      height: double.infinity,
-      child: Container(
-        color: const Color.fromARGB(171, 41, 41, 41),
-        child: const Center(child: CircularProgressIndicator()),
-      ),
-    ));
+        visible: isVisible,
+        child: SizedBox(
+          width: 400,
+          height: double.infinity,
+          child: Container(
+            color: const Color.fromARGB(171, 41, 41, 41),
+            child: const Center(child: CircularProgressIndicator()),
+          ),
+        ));
   }
 
   @override
@@ -59,7 +56,7 @@ class _CadastroPageState extends State<CadastroPage> {
                       Align(
                           alignment: Alignment.topLeft,
                           child: Icon(
-                            Icons.arrow_back,
+                            Icons.arrow_back_rounded,
                             color: Colors.white,
                             size: 50,
                           )),
@@ -104,15 +101,14 @@ class _CadastroPageState extends State<CadastroPage> {
                       if (nameController.text != "" &&
                           emailController.text != "" &&
                           senhaController.text != "") {
-
                         setState(() {
                           loadingIsVisible = true;
                         });
 
                         await cadastroController.start(CadastroUserDto(
-                            nome: nameController.text,
-                            email: emailController.text,
-                            senha: senhaController.text));
+                            nome: nameController.text.trim(),
+                            email: emailController.text.trim(),
+                            senha: senhaController.text.trim()));
 
                         setState(() {
                           loadingIsVisible = false;
@@ -125,6 +121,12 @@ class _CadastroPageState extends State<CadastroPage> {
                               CadastroStatus.noInternet) {
                             errorMsg = "Falha na conecção. Tente novamente!";
                             errorIsVisible = true;
+                          } else if (cadastroController.state ==
+                              CadastroStatus.created) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()));
                           }
                         });
                       }
