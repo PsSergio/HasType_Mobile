@@ -6,21 +6,24 @@ import 'package:hastype/data/repositories/user_repository.dart';
 
 class LoginController {
   LoginStates state = LoginStates.start;
+  SuperLoginStates superState = SuperLoginStates.start;
+
 
   Future<dynamic> start(LoginUserDto model) async {
-    SuperLoginStates superState = SuperLoginStates.sucess;
     state = LoginStates.loading;
-
 
     try{
       
       final response = await UserRepository().singinUser(model);
 
       state = LoginStates.logged;
+      superState = SuperLoginStates.sucess;
 
       return response;
 
-    } on DioException catch (e) {
+    } on DioException catch (e) {      
+
+      superState = SuperLoginStates.error;
 
       if (e.response?.statusCode == 401) {
         state = LoginStates.userAlreadyLogged;
@@ -33,12 +36,12 @@ class LoginController {
         return "Falha na conecção. Tente novamente!";
       }
 
-      superState = SuperLoginStates.error;
     }
   }
 }
 
 enum SuperLoginStates{
+  start,
   sucess, 
   error
 }

@@ -89,13 +89,10 @@ class _LoginPageState extends State<LoginPage> {
                                 email: emailController.text.trim(),
                                 senha: senhaController.text.trim()));
 
-                        print(response);
-
                         setState(() {
                           loadingIsVisible = false;
 
-                          if (loginController.state != LoginStates.logged &&
-                              loginController.state != LoginStates.loading && loginController.state != LoginStates.start) {
+                          if (loginController.superState == SuperLoginStates.error) {
                             errorIsVisible = true;
                             errorMsg = response.toString();
                           } else {

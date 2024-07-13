@@ -101,17 +101,11 @@ class _CadastroPageState extends State<CadastroPage> {
                         setState(() {
                           loadingIsVisible = false;
 
-                          if (cadastroController.state ==
-                              CadastroStatus.emailExists) {
-                            errorMsg = "Este email já está cadastrado!";
+                          if(cadastroController.superState == SuperCadastroStatus.error){
+                            errorMsg = response.toString();
                             errorIsVisible = true;
-                          } else if (cadastroController.state ==
-                              CadastroStatus.noInternet) {
-                            errorMsg = "Falha na conecção. Tente novamente!";
-                            errorIsVisible = true;
-                          } else if (cadastroController.state ==
-                              CadastroStatus.created) {
-                              Navigator.push(
+                          }else{ 
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const HomePage()));

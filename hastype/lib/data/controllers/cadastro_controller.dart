@@ -4,6 +4,8 @@ import 'package:hastype/data/repositories/user_repository.dart';
 
 class CadastroController {
   CadastroStatus state = CadastroStatus.start;
+  SuperCadastroStatus superState = SuperCadastroStatus.start;
+  
 
   Future<dynamic> start(CadastroUserDto model) async {
     state = CadastroStatus.loading;
@@ -12,9 +14,11 @@ class CadastroController {
       final response = await UserRepository().singupUser(model);
 
       state = CadastroStatus.created;
+      superState = SuperCadastroStatus.sucess;
 
       return response;
     } on DioException catch (e) {
+      superState = SuperCadastroStatus.error;
       if (e.type == DioExceptionType.badResponse) {
         state = CadastroStatus.emailExists;
         return e.response?.data;
@@ -32,4 +36,10 @@ enum CadastroStatus {
   emailExists,
   noInternet,
   loading,
+}
+
+enum SuperCadastroStatus{ 
+  start, 
+  sucess,
+  error
 }
