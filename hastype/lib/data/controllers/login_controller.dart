@@ -13,6 +13,7 @@ class LoginController {
 
 
     try{
+      
       final response = await UserRepository().singinUser(model);
 
       state = LoginStates.logged;
@@ -20,7 +21,6 @@ class LoginController {
       return response;
 
     } on DioException catch (e) {
-        print(e.response?.statusCode);
 
       if (e.response?.statusCode == 401) {
         state = LoginStates.userAlreadyLogged;
@@ -35,8 +35,6 @@ class LoginController {
 
       superState = SuperLoginStates.error;
     }
-    print(superState);
-    print(state);
   }
 }
 

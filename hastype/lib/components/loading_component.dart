@@ -16,6 +16,6 @@ class LoadingComponent extends StatelessWidget {
             color: const Color.fromARGB(171, 41, 41, 41),
             child: const Center(child: CircularProgressIndicator()),
           ),
-        ));;
+        ));
   }
 }

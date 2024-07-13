@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hastype/views/cadastro_page.dart';
-import 'package:hastype/views/first_page.dart';
 import 'package:hastype/views/login_page.dart';
 
 class MainApp extends StatelessWidget{

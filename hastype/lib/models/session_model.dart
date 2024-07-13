@@ -1,15 +1,13 @@
 class SessionModel {
-  final String id;
-  final String userId;
+  String? id;
+  String? userId;
 
-  SessionModel({
-    required this.id,
-    required this.userId,
-  });
+  SessionModel({this.id, this.userId});
 
-  SessionModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        userId = json['userId'];
+  SessionModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['userId'];
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

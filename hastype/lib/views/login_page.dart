@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hastype/components/button_default.dart';
 import 'package:hastype/components/input_box.dart';
@@ -81,27 +78,24 @@ class _LoginPageState extends State<LoginPage> {
                   ButtonDefault(
                       text: "Entrar",
                       onPressed: () async {
-                        // if (senhaController.text != "" &&
-                        //     emailController.text != "") {
+                        if (senhaController.text != "" &&
+                            emailController.text != "") {
                         setState(() {
                           loadingIsVisible = true;
                         });
 
-                        // final response = await loginController.start(
-                        //     LoginUserDto(
-                        //         email: emailController.text.trim(),
-                        //         senha: senhaController.text.trim()));
-
                         final response = await loginController.start(
                             LoginUserDto(
-                                email: "sergioamcosta@gmail.com",
-                                senha: "312151"));
+                                email: emailController.text.trim(),
+                                senha: senhaController.text.trim()));
+
+                        print(response);
 
                         setState(() {
                           loadingIsVisible = false;
 
                           if (loginController.state != LoginStates.logged &&
-                              loginController.state != LoginStates.loading) {
+                              loginController.state != LoginStates.loading && loginController.state != LoginStates.start) {
                             errorIsVisible = true;
                             errorMsg = response.toString();
                           } else {
@@ -112,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         });
 
-                        // }
+                        }
                       })
                 ],
               ),

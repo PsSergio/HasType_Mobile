@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:hastype/data/dtos/cadastro_user_dto.dart';
 import 'package:hastype/data/dtos/login_user_dto.dart';
 import 'package:hastype/models/session_model.dart';
 import 'package:hastype/models/user_model.dart';
-import 'package:http/http.dart' as http;
 
 class UserRepository {
   final dio = Dio();
@@ -22,17 +19,11 @@ class UserRepository {
     return await dio.post("http://192.168.15.200:8080/user/byEmail/$email");
   }
 
-  Future<dynamic> singinUser(LoginUserDto model) async {
-    // final response = await http.post(url, body: jsonEncode(model), headers: {
-    //   "Accept": "*/*",
-    //   'Content-Type': 'application/json'
-    // });
-
+  Future<SessionModel> singinUser(LoginUserDto model) async {
     final response = await dio.post("http://192.168.15.200:8080/user/singin", data: model.toJson(), options: Options(
       contentType: 'application/json' 
     )
     );
-
     return SessionModel.fromJson(response.data);
     // needs to fix this return
   }

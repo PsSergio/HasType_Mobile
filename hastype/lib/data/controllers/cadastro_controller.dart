@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:hastype/data/dtos/cadastro_user_dto.dart';
 import 'package:hastype/data/repositories/user_repository.dart';
-import 'package:hastype/models/user_model.dart';
 
 class CadastroController {
   CadastroStatus state = CadastroStatus.start;
