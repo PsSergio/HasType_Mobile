@@ -37,22 +37,26 @@ class _CadastroPageState extends State<CadastroPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const SizedBox(
+                SizedBox(
                   // height: 400,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Align(
                           alignment: Alignment.topLeft,
-                          child: Icon(
-                            Icons.arrow_back_rounded,
-                            color: Colors.white,
-                            size: 50,
-                          )),
-                      SizedBox(
+                          child: IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(
+                                Icons.arrow_back_rounded,
+                                color: Colors.white,
+                                size: 50,
+                              ))),
+                      const SizedBox(
                         height: 70,
                       ),
-                      TextDefault(
+                      const TextDefault(
                           text: "Se cadastre para jogar!", fontSize: 28),
                     ],
                   ),
@@ -94,18 +98,20 @@ class _CadastroPageState extends State<CadastroPage> {
                           loadingIsVisible = true;
                         });
 
-                        final response = await cadastroController.start(CadastroUserDto(
-                            nome: nameController.text.trim(),
-                            email: emailController.text.trim(),
-                            senha: senhaController.text.trim()));
+                        final response = await cadastroController.start(
+                            CadastroUserDto(
+                                nome: nameController.text.trim(),
+                                email: emailController.text.trim(),
+                                senha: senhaController.text.trim()));
 
                         setState(() {
                           loadingIsVisible = false;
 
-                          if(cadastroController.superState == SuperCadastroStatus.error){
+                          if (cadastroController.superState ==
+                              SuperCadastroStatus.error) {
                             errorMsg = response.toString();
                             errorIsVisible = true;
-                          }else{ 
+                          } else {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

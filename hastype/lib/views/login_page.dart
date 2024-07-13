@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hastype/components/button_default.dart';
 import 'package:hastype/components/input_box.dart';
 import 'package:hastype/components/loading_component.dart';
@@ -37,22 +38,27 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const SizedBox(
+                  SizedBox(
                     // height: 400,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Align(
                             alignment: Alignment.topLeft,
-                            child: Icon(
-                              Icons.arrow_back_rounded,
-                              color: Colors.white,
-                              size: 50,
-                            )),
-                        SizedBox(
+                            child: IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_rounded,
+                                  color: Colors.white,
+                                  size: 50,
+                                ))),
+                        const SizedBox(
                           height: 70,
                         ),
-                        TextDefault(text: "Entre na sua conta!", fontSize: 28),
+                        const TextDefault(
+                            text: "Entre na sua conta!", fontSize: 28),
                       ],
                     ),
                   ),
@@ -81,29 +87,29 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () async {
                         if (senhaController.text != "" &&
                             emailController.text != "") {
-                        setState(() {
-                          loadingIsVisible = true;
-                        });
+                          setState(() {
+                            loadingIsVisible = true;
+                          });
 
-                        final response = await loginController.start(
-                            LoginUserDto(
-                                email: emailController.text.trim(),
-                                senha: senhaController.text.trim()));
+                          final response = await loginController.start(
+                              LoginUserDto(
+                                  email: emailController.text.trim(),
+                                  senha: senhaController.text.trim()));
 
-                        setState(() {
-                          loadingIsVisible = false;
+                          setState(() {
+                            loadingIsVisible = false;
 
-                          if (loginController.superState == SuperLoginStates.error) {
-                            errorIsVisible = true;
-                            errorMsg = response.toString();
-                          } else {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const HomePage()));
-                          }
-                        });
-
+                            if (loginController.superState ==
+                                SuperLoginStates.error) {
+                              errorIsVisible = true;
+                              errorMsg = response.toString();
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const HomePage()));
+                            }
+                          });
                         }
                       })
                 ],
@@ -111,53 +117,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           ModalError(errorIsVisible: errorIsVisible, errorMsg: errorMsg),
-          // Visibility(
-          //   visible: errorIsVisible,
-          //   child: SizedBox(
-          //     width: 400,
-          //     height: double.infinity,
-          //     child: Container(
-          //       color: const Color.fromARGB(171, 41, 41, 41),
-          //       alignment: Alignment.bottomCenter,
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           SizedBox(
-          //             height: 150,
-          //             child: Align(
-          //               alignment: const FractionalOffset(0.9, 0.5),
-          //               child: IconButton(
-          //                 icon: const Icon(Icons.close_rounded,
-          //                     color: Colors.white, size: 50),
-          //                 onPressed: () {
-          //                   setState(() {
-          //                     errorIsVisible = false;
-          //                   });
-          //                 },
-          //               ),
-          //             ),
-          //           ),
-          //           Container(
-          //             height: 100,
-          //             color: const Color.fromARGB(255, 238, 99, 89),
-          //             child: SizedBox(
-          //               width: double.infinity,
-          //               child: Column(
-          //                 mainAxisAlignment: MainAxisAlignment.center,
-          //                 children: [
-          //                   Text(
-          //                     errorMsg,
-          //                     style: const TextStyle(fontSize: 15),
-          //                   )
-          //                 ],
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
           LoadingComponent(isVisible: loadingIsVisible)
         ],
       ),
