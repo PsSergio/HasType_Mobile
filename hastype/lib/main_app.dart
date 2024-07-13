@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hastype/views/cadastro_page.dart';
+import 'package:hastype/views/home_page.dart';
 import 'package:hastype/views/login_page.dart';
 
 class MainApp extends StatelessWidget{

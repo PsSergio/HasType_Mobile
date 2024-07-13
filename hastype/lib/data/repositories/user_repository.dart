@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:hastype/data/dtos/cadastro_user_dto.dart';
 import 'package:hastype/data/dtos/login_user_dto.dart';
 import 'package:hastype/models/session_model.dart';
-import 'package:hastype/models/user_model.dart';
 
 class UserRepository {
   final dio = Dio();
