@@ -32,6 +32,8 @@ dependencies:
   http: ^1.2.1
   google_fonts: ^6.2.1
   dio: ^5.4.3+1
+  flutter_rounded_progress_bar: ^0.3.2
+  percent_indicator: ^4.2.3
   flutter:
     sdk: flutter
 
