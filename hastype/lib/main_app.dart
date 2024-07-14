@@ -8,7 +8,7 @@ class MainApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const HomePage(),
+      home: const LoginPage(),
       theme: ThemeData(
         scaffoldBackgroundColor: const Color.fromRGBO(50, 52, 55, 1),
         // fontFamily: GoogleFonts.jetBrainsMono()

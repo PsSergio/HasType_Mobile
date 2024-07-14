@@ -26,4 +26,8 @@ class UserRepository {
     return SessionModel.fromJson(response.data);
     // needs to fix this return
   }
+
+  Future<Response> logoutUser(String? userId) async{
+    return await dio.delete("http://192.168.15.200:8080/user/logout/$userId");
+  } 
 }

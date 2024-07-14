@@ -15,55 +15,58 @@ class FirstPage extends StatefulWidget {
 class FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(image: AssetImage('assets/images/logo.png')),
-                SizedBox(
-                  width: 2,
-                ),
-                Text(
-                  "hasType",
-                  style: TextStyle(
-                      color: Color.fromRGBO(217, 217, 217, 1),
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 350,
-            ),
-            Column(
-              children: [
-                ButtonDefault(
-                    text: "Entrar",
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()));
-                    }),
-                const SizedBox(
-                  height: 20,
-                ),
-                DarkButtonDefault(
-                    text: "Cadastrar",
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const CadastroPage()));
-                    })
-              ],
-            )
-          ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(image: AssetImage('assets/images/logo.png')),
+                  SizedBox(
+                    width: 2,
+                  ),
+                  Text(
+                    "hasType",
+                    style: TextStyle(
+                        color: Color.fromRGBO(217, 217, 217, 1),
+                        fontSize: 34,
+                        fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 350,
+              ),
+              Column(
+                children: [
+                  ButtonDefault(
+                      text: "Entrar",
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()));
+                      }),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  DarkButtonDefault(
+                      text: "Cadastrar",
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const CadastroPage()));
+                      })
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
