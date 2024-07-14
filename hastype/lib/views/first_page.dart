@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hastype/components/button_default.dart';
 import 'package:hastype/components/dark_button_default.dart';
-import 'package:hastype/components/text_default.dart';
 import 'package:hastype/views/cadastro_page.dart';
 import 'package:hastype/views/login_page.dart';
 

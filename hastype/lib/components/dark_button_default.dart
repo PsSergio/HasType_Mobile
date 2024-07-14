@@ -18,7 +18,7 @@ class DarkButtonDefault extends StatelessWidget {
           fontSize: 25,
           color: Colors.white
           ) ,
-        backgroundColor: Color.fromRGBO(44, 46, 49, 1),
+        backgroundColor: const Color.fromRGBO(44, 46, 49, 1),
         padding: const EdgeInsets.all(20),
         fixedSize: const Size(300, 70),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
