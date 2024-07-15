@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   child: Blur(
                     blur: 7,
-                    blurColor: Color.fromRGBO(50, 52, 55, 1),
+                    blurColor: const Color.fromRGBO(50, 52, 55, 1),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => QuizPage()));
+                                  builder: (context) => QuizPage(sessionModel: sessionModel,)));
                         }
                       });
                     })
