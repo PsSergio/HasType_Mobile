@@ -11,6 +11,7 @@ import 'package:hastype/data/controllers/quiz_controller.dart';
 import 'package:hastype/data/dtos/start_quiz_response_dto.dart';
 import 'package:hastype/models/session_model.dart';
 import 'package:hastype/views/feedback_page.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:vibration/vibration.dart';
 
 class QuizPage extends StatefulWidget {
@@ -38,6 +39,14 @@ class _QuizPageState extends State<QuizPage> {
   int indexQuestion = 0;
   bool startTimerIsVisible = true;
 
+  bool stopTimer = false;
+
+  int hours = 0;
+  int minutes = 0;
+  int seconds = 0;
+
+  String timerFormated = "";
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +57,8 @@ class _QuizPageState extends State<QuizPage> {
     await _startTimer();
 
     await getResponse();
+
+    startQuizTimer(stopTimer);
 
     print(response.palavras.last.palavraNormal);
 
@@ -69,6 +80,43 @@ class _QuizPageState extends State<QuizPage> {
       });
     }
     return true;
+  }
+
+  startQuizTimer(bool stopTimer) async {
+    while (!stopTimer) {
+      await Future.delayed(const Duration(seconds: 1));
+
+      if (seconds < 59) {
+        seconds++;
+      } else {
+        seconds = 0;
+        minutes++;
+
+        if(minutes == 59){
+          minutes = 0;
+          hours++;
+        }
+      }
+      formatTimer();
+    }
+  }
+
+  formatTimer() {
+    String secondsFormated = "${seconds}s", minutesFormated = "${minutes}min", hoursFormated = "${hours}h";
+
+    if (seconds == 0) {
+      secondsFormated = "";
+    }
+    if (minutes == 0) {
+      minutesFormated = "";
+    }
+    if (hours == 0) {
+      hoursFormated = "";
+    }
+
+    setState(() {
+      timerFormated = "$hoursFormated$minutesFormated$secondsFormated";
+    });
   }
 
   setWordQuiz() {
@@ -123,18 +171,17 @@ class _QuizPageState extends State<QuizPage> {
                             child: Container(
                                 width: 300,
                                 height: 20,
-                                child: ClipRRect(
-                                  borderRadius:
-                                      const BorderRadius.all(Radius.circular(30)),
-                                  child: LinearProgressIndicator(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(30),
-                                    ),
-                                    backgroundColor:
-                                        const Color.fromRGBO(44, 46, 49, 1),
-                                    color: const Color.fromRGBO(100, 102, 105, 1),
-                                    value: getProgressBarValue(),
-                                  ),
+                                child: LinearPercentIndicator(
+                                  animateFromLastPercent: true,
+                                  curve: Curves.easeInOut,
+                                  animation: true,
+                                  lineHeight: 20,
+                                  backgroundColor:
+                                      const Color.fromRGBO(44, 46, 49, 1),
+                                  progressColor:
+                                      const Color.fromRGBO(100, 102, 105, 1),
+                                  percent: getProgressBarValue(),
+                                  barRadius: const Radius.circular(30),
                                 )),
                           ),
                           const SizedBox(
@@ -153,13 +200,15 @@ class _QuizPageState extends State<QuizPage> {
                               ),
                               Text("Pontuação: $score",
                                   style: const TextStyle(
-                                      fontSize: 24, fontWeight: FontWeight.bold)),
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold)),
                               const SizedBox(
                                 height: 10,
                               ),
-                              const Text("Tempo: 4s",
+                              Text("Tempo: $timerFormated",
                                   style: TextStyle(
-                                      fontSize: 24, fontWeight: FontWeight.bold)),
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold)),
                             ],
                           ),
                           const SizedBox(
@@ -177,19 +226,23 @@ class _QuizPageState extends State<QuizPage> {
                   ButtonDefault(
                       text: "Confirmar",
                       onPressed: () async {
+                        if (quizInputController.text == "") return;
+
                         setScoreQuiz(quizInputController.text);
-      
+
                         if (indexQuestion < 9) {
                           await HapticFeedback.heavyImpact();
                           indexQuestion++;
                           setWordQuiz();
+                          quizInputController.text = "";
                         } else {
+                          stopTimer = true;
                           setState(() {
                             indexQuestion++;
                           });
                           Vibration.vibrate(duration: 1000);
                           await Future.delayed(Duration(seconds: 2));
-      
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(
