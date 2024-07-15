@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:blur/blur.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hastype/components/button_default.dart';
 import 'package:hastype/components/input_box.dart';
 import 'package:hastype/components/text_default.dart';
 import 'package:hastype/data/controllers/quiz_controller.dart';
 import 'package:hastype/data/dtos/start_quiz_response_dto.dart';
 import 'package:hastype/models/session_model.dart';
+import 'package:hastype/views/feedback_page.dart';
+import 'package:vibration/vibration.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key, required this.sessionModel});
@@ -44,7 +47,9 @@ class _QuizPageState extends State<QuizPage> {
   Future processToStartQuiz() async {
     await _startTimer();
 
-    getResponse();
+    await getResponse();
+
+    print(response.palavras.last.palavraNormal);
 
     _hideTimer();
   }
@@ -73,15 +78,18 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   setScoreQuiz(String answer) {
-    if (answer.trim().toLowerCase() == response.palavras[indexQuestion].palavraTraduzida.toString().toLowerCase()) {
+    if (answer.trim().toLowerCase() ==
+        response.palavras[indexQuestion].palavraTraduzida
+            .toString()
+            .toLowerCase()) {
       setState(() {
         score++;
       });
     }
   }
 
-  double getProgressBarValue(){
-    return indexQuestion.toDouble()/10;
+  double getProgressBarValue() {
+    return indexQuestion.toDouble() / 10;
   }
 
   _hideTimer() {
@@ -92,111 +100,127 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(30)),
-                          child: Container(
-                              width: 300,
-                              height: 20,
-                              child: ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(30)),
-                                child: LinearProgressIndicator(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(30),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(30)),
+                            child: Container(
+                                width: 300,
+                                height: 20,
+                                child: ClipRRect(
+                                  borderRadius:
+                                      const BorderRadius.all(Radius.circular(30)),
+                                  child: LinearProgressIndicator(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(30),
+                                    ),
+                                    backgroundColor:
+                                        const Color.fromRGBO(44, 46, 49, 1),
+                                    color: const Color.fromRGBO(100, 102, 105, 1),
+                                    value: getProgressBarValue(),
                                   ),
-                                  backgroundColor:
-                                      const Color.fromRGBO(44, 46, 49, 1),
-                                  color: const Color.fromRGBO(100, 102, 105, 1),
-                                  value: getProgressBarValue(),
-                                ),
-                              )),
-                        ),
-                        const SizedBox(
-                          height: 100,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(wordQuestion,
-                                style: const TextStyle(
-                                    color: Color.fromRGBO(100, 102, 105, 1),
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold)),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text("Pontuação: $score",
-                                style: const TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text("Tempo: 4s",
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 75,
-                        ),
-                        SizedBox(
-                            width: 300,
-                            child: InputBox(
-                                text: "Digite aqui",
-                                controller: quizInputController))
-                      ],
+                                )),
+                          ),
+                          const SizedBox(
+                            height: 100,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(wordQuestion,
+                                  style: const TextStyle(
+                                      color: Color.fromRGBO(100, 102, 105, 1),
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold)),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text("Pontuação: $score",
+                                  style: const TextStyle(
+                                      fontSize: 24, fontWeight: FontWeight.bold)),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text("Tempo: 4s",
+                                  style: TextStyle(
+                                      fontSize: 24, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 75,
+                          ),
+                          SizedBox(
+                              width: 300,
+                              child: InputBox(
+                                  text: "Digite aqui",
+                                  controller: quizInputController))
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                ButtonDefault(text: "Confirmar", onPressed: () {
-                  if(indexQuestion != 9){
-                    setWordQuiz();
-                    setScoreQuiz(quizInputController.text);
-                  }else{
-                    // to feedback page
-                  }
-                  indexQuestion++;
-                })
-              ],
+                  ButtonDefault(
+                      text: "Confirmar",
+                      onPressed: () async {
+                        setScoreQuiz(quizInputController.text);
+      
+                        if (indexQuestion < 9) {
+                          await HapticFeedback.heavyImpact();
+                          indexQuestion++;
+                          setWordQuiz();
+                        } else {
+                          setState(() {
+                            indexQuestion++;
+                          });
+                          Vibration.vibrate(duration: 1000);
+                          await Future.delayed(Duration(seconds: 2));
+      
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const FeedbackPage()));
+                        }
+                      })
+                ],
+              ),
             ),
-          ),
-          Visibility(
-            visible: startTimerIsVisible,
-            child: Stack(
-              children: [
-                const SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Blur(
-                    blur: 7,
-                    blurColor: Color.fromRGBO(50, 52, 55, 1),
-                    child: SizedBox(),
+            Visibility(
+              visible: startTimerIsVisible,
+              child: Stack(
+                children: [
+                  const SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Blur(
+                      blur: 7,
+                      blurColor: Color.fromRGBO(50, 52, 55, 1),
+                      child: SizedBox(),
+                    ),
                   ),
-                ),
-                Center(
-                  child:
-                      TextDefault(text: startTimer.toString(), fontSize: 100),
-                ),
-              ],
-            ),
-          )
-        ],
+                  Center(
+                    child:
+                        TextDefault(text: startTimer.toString(), fontSize: 100),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

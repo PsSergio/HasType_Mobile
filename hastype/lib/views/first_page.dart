@@ -15,8 +15,8 @@ class FirstPage extends StatefulWidget {
 class FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
