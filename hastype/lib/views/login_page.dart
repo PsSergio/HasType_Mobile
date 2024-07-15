@@ -123,3 +123,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+closeModalError(bool errorIsVisible){
+  errorIsVisible = false;
+}

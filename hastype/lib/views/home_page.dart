@@ -1,16 +1,12 @@
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
-import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:hastype/components/button_default.dart';
 import 'package:hastype/components/input_box.dart';
 import 'package:hastype/components/loading_component.dart';
-import 'package:hastype/components/modal_error.dart';
 import 'package:hastype/data/controllers/home_controller.dart';
 import 'package:hastype/models/session_model.dart';
 import 'package:hastype/views/first_page.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:hastype/views/quiz_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.sessionModel});
@@ -83,7 +79,6 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ClipRRect(
-                  
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   child: Blur(
                     blur: 7,
@@ -94,57 +89,90 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           ClipRRect(
-                            borderRadius: const BorderRadius.all(Radius.circular(30)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(30)),
                             child: Container(
-                              width: 300,
-                              height: 20,
-                              child: const ClipRRect(
-                                borderRadius: BorderRadius.all(Radius.circular(30)),
-                                child: LinearProgressIndicator(
-                                  borderRadius: BorderRadius.all(Radius.circular(30),),
-                                  backgroundColor: Color.fromRGBO(44, 46, 49, 1),
-                                  color: Color.fromRGBO(100, 102, 105, 1),
-                                  value: .5,
-                              ),
-                            )),
+                                width: 300,
+                                height: 20,
+                                child: const ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(30)),
+                                  child: LinearProgressIndicator(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(30),
+                                    ),
+                                    backgroundColor:
+                                        Color.fromRGBO(44, 46, 49, 1),
+                                    color: Color.fromRGBO(100, 102, 105, 1),
+                                    value: .5,
+                                  ),
+                                )),
                           ),
-                      
-                          const SizedBox(height: 100,),
-                      
+                          const SizedBox(
+                            height: 100,
+                          ),
                           const Column(
-                      
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("World", style: TextStyle(
-                                color: Color.fromRGBO(100, 102, 105, 1),
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold
-                              )),
-                              SizedBox(height: 10,),
-                              Text("Pontuação: 4", style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold
-                              )),
-                              SizedBox(height: 10,),
-                              Text("Tempo: 4s", style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold
-                              )),
-                            
+                              Text("World",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(100, 102, 105, 1),
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold)),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text("Pontuação: 4",
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold)),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text("Tempo: 4s",
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold)),
                             ],
                           ),
-                      
-                          const SizedBox(height: 50,),
-                      
-                      
-                          SizedBox(width:300, child: InputBox(text: "Digite aqui", controller: quizController))
-                      
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          SizedBox(
+                              width: 300,
+                              child: InputBox(
+                                  text: "Digite aqui",
+                                  controller: quizController))
                         ],
                       ),
                     ),
                   ),
                 ),
-                ButtonDefault(text: "Começar", onPressed: () {})
+                ButtonDefault(
+                    text: "Começar",
+                    onPressed: () async {
+                      setState(() {
+                        loadingIsVisible = true;
+                      });
+
+                      final response = await homeController
+                          .preStartQuiz(sessionModel.id);
+
+                      setState(() {
+                        loadingIsVisible = false;
+
+                        if (homeController.preQuizState ==
+                            PreQuizStates.error) {
+                          errorIsVisible = true;
+                          errorMsg = response.toString();
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => QuizPage()));
+                        }
+                      });
+                    })
               ],
             ),
           ),
@@ -163,7 +191,55 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: const Color.fromRGBO(44, 46, 49, 1),
           ),
         ),
-        ModalError(errorIsVisible: errorIsVisible, errorMsg: errorMsg),
+        Visibility(
+          visible: errorIsVisible,
+          child: SizedBox(
+            width: 400,
+            height: double.infinity,
+            child: Container(
+              color: const Color.fromARGB(171, 41, 41, 41),
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    height: 150,
+                    child: Align(
+                      alignment: const FractionalOffset(0.9, 0.5),
+                      child: IconButton(
+                        icon: const Icon(Icons.close_rounded,
+                            color: Colors.white, size: 50),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FirstPage()));
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 100,
+                    color: const Color.fromARGB(255, 238, 99, 89),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            errorMsg,
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.white),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
         LoadingComponent(isVisible: loadingIsVisible)
       ],
     );

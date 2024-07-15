@@ -8,56 +8,55 @@ class ModalError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return Visibility(
-                visible: errorIsVisible,
-                child: SizedBox(
-                  width: 400,
-                  height: double.infinity,
-                  child: Container(
-                    color: const Color.fromARGB(171, 41, 41, 41),
-                    alignment: Alignment.bottomCenter,
+    return StatefulBuilder(builder: (context, setState) {
+      return Visibility(
+        visible: errorIsVisible,
+        child: SizedBox(
+          width: 400,
+          height: double.infinity,
+          child: Container(
+            color: const Color.fromARGB(171, 41, 41, 41),
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  height: 150,
+                  child: Align(
+                    alignment: const FractionalOffset(0.9, 0.5),
+                    child: IconButton(
+                      icon: const Icon(Icons.close_rounded,
+                          color: Colors.white, size: 50),
+                      onPressed: () {
+                        setState(() {
+                          errorIsVisible = false;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 100,
+                  color: const Color.fromARGB(255, 238, 99, 89),
+                  child: SizedBox(
+                    width: double.infinity,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          height: 150,
-                          child: Align(
-                            alignment: const FractionalOffset(0.9, 0.5),
-                            child: IconButton(
-                              icon: const Icon(Icons.close_rounded,
-                                  color: Colors.white, size: 50),
-                              onPressed: () {
-                                setState(() {
-                                  errorIsVisible = false;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 100,
-                          color: const Color.fromARGB(255, 238, 99, 89),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  errorMsg,
-                                  style: const TextStyle(fontSize: 15, color: Colors.white),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        Text(
+                          errorMsg,
+                          style: const TextStyle(
+                              fontSize: 15, color: Colors.white),
+                        )
                       ],
                     ),
                   ),
                 ),
-              );
-      }
-    );
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

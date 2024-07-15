@@ -130,3 +130,7 @@ class _CadastroPageState extends State<CadastroPage> {
     );
   }
 }
+
+closeModalError(bool errorIsVisible){
+  errorIsVisible = false;
+}
