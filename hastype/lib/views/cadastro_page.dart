@@ -7,6 +7,7 @@ import 'package:hastype/components/text_default.dart';
 import 'package:hastype/data/controllers/cadastro_controller.dart';
 import 'package:hastype/data/dtos/cadastro_user_dto.dart';
 import 'package:hastype/views/home_page.dart';
+import 'package:hastype/views/main_super_page.dart';
 
 class CadastroPage extends StatefulWidget {
   const CadastroPage({super.key});
@@ -115,7 +116,7 @@ class _CadastroPageState extends State<CadastroPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage(sessionModel: response,)));
+                                    builder: (context) => MainSuperPage(sessionModel: response,)));
                           }
                         });
                       }

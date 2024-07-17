@@ -1,14 +1,16 @@
 import 'dart:async';
 
 import 'package:blur/blur.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hastype/components/button_default.dart';
 import 'package:hastype/components/input_box.dart';
 import 'package:hastype/components/text_default.dart';
 import 'package:hastype/data/controllers/quiz_controller.dart';
+import 'package:hastype/data/dtos/finish_quiz_dto.dart';
+import 'package:hastype/data/dtos/finish_quiz_response_dto.dart';
 import 'package:hastype/data/dtos/start_quiz_response_dto.dart';
+import 'package:hastype/models/resposta_model.dart';
 import 'package:hastype/models/session_model.dart';
 import 'package:hastype/views/feedback_page.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -32,6 +34,10 @@ class _QuizPageState extends State<QuizPage> {
   final quizController = QuizController();
 
   late StartQuizResponseDto response;
+
+  List<RespostaModel> respostas = [];
+
+  late FinishQuizDto jsonToSend;
 
   String wordQuestion = "";
   int score = 0;
@@ -92,7 +98,7 @@ class _QuizPageState extends State<QuizPage> {
         seconds = 0;
         minutes++;
 
-        if(minutes == 59){
+        if (minutes == 59) {
           minutes = 0;
           hours++;
         }
@@ -102,7 +108,9 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   formatTimer() {
-    String secondsFormated = "${seconds}s", minutesFormated = "${minutes}min", hoursFormated = "${hours}h";
+    String secondsFormated = "${seconds}s",
+        minutesFormated = "${minutes}min",
+        hoursFormated = "${hours}h";
 
     if (seconds == 0) {
       secondsFormated = "";
@@ -144,6 +152,19 @@ class _QuizPageState extends State<QuizPage> {
     setState(() {
       startTimerIsVisible = false;
     });
+  }
+
+  saveAnswerInObject() {
+    final palavraId = response.palavras[indexQuestion].id;
+    final resposta =
+        "${quizInputController.text[0].toUpperCase()}${quizInputController.text.substring(1).toLowerCase()}"
+            .trim();
+
+    print("Resposta: " + resposta.toString());
+
+    final model = RespostaModel(palavraId: palavraId, resposta: resposta);
+
+    respostas.add(model);
   }
 
   @override
@@ -206,7 +227,7 @@ class _QuizPageState extends State<QuizPage> {
                                 height: 10,
                               ),
                               Text("Tempo: $timerFormated",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -230,23 +251,40 @@ class _QuizPageState extends State<QuizPage> {
 
                         setScoreQuiz(quizInputController.text);
 
+                        saveAnswerInObject();
                         if (indexQuestion < 9) {
                           await HapticFeedback.heavyImpact();
+
                           indexQuestion++;
                           setWordQuiz();
                           quizInputController.text = "";
+
                         } else {
-                          stopTimer = true;
+                          jsonToSend = FinishQuizDto(
+                              respostas: respostas); // get all answers
+
+                          FinishQuizResponseDto finishResponse =
+                              await quizController.finishQuiz(
+                                  response.quiz.id, jsonToSend);
+
+                          stopTimer = true; // stop timer
+
                           setState(() {
-                            indexQuestion++;
+                            indexQuestion++; // just complete the progress bar
                           });
-                          Vibration.vibrate(duration: 1000);
-                          await Future.delayed(Duration(seconds: 2));
+
+                          Vibration.vibrate(duration: 1000); // vibration
+
+                          await Future.delayed(const Duration(seconds: 2));
 
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const FeedbackPage()));
+                                  builder: (context) => FeedbackPage(
+                                        finishQuizResponseDto: finishResponse,
+                                        timeFormated: timerFormated,
+                                        sessionModel: sessionModel,
+                                      )));
                         }
                       })
                 ],

@@ -8,6 +8,7 @@ import 'package:hastype/components/text_default.dart';
 import 'package:hastype/data/controllers/login_controller.dart';
 import 'package:hastype/data/dtos/login_user_dto.dart';
 import 'package:hastype/views/home_page.dart';
+import 'package:hastype/views/main_super_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -107,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => HomePage(sessionModel: response)));
+                                      builder: (context) => MainSuperPage(sessionModel: response)));
                             }
                           });
                         }
