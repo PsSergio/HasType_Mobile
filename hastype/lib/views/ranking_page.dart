@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hastype/models/session_model.dart';
-import 'package:hastype/views/home_page.dart';
+import 'package:flutter/widgets.dart';
+import 'package:hastype/components/text_table.dart';
 
 class RankingPage extends StatefulWidget {
   const RankingPage({super.key});
@@ -9,12 +9,146 @@ class RankingPage extends StatefulWidget {
   State<RankingPage> createState() => _RankingPageState();
 }
 
+criarTitleTable(String tempoOrPontuacao) {
+  return TableRow(
+      decoration: const BoxDecoration(
+          border: Border(
+              bottom: BorderSide(
+        color: Colors.white,
+        width: 2,
+      ))),
+      children: [
+        const TableCell(
+            child: Padding(
+          padding: EdgeInsets.all(8),
+          child: TextTable(text: "nº", color: Colors.white),
+        )),
+        const TableCell(
+            child: Padding(
+          padding: EdgeInsets.all(8),
+          child: TextTable(text: "nome", color: Colors.white),
+        )),
+        TableCell(
+            child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: TextTable(text: tempoOrPontuacao, color: Colors.white),
+        )),
+      ]);
+}
+
+criarLinhaTable(String position, String name, String lastColumn){
+  Color colorPosition = Colors.white;
+  switch(position){
+    case "1":
+      colorPosition = const Color.fromRGBO(226, 183, 20, 1);
+    case "2":
+      colorPosition = const Color.fromRGBO(104, 104, 104, 1);
+    case "3":
+      colorPosition = const Color.fromRGBO(167, 95, 28, 1);
+    default: 
+      colorPosition = Colors.white;
+  }
+
+  return TableRow(
+      children: [
+        TableCell(
+            child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: TextTable(text: position, color: colorPosition),
+        )),
+        TableCell(
+            child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: TextTable(text: name, color: Colors.white),
+        )),
+        TableCell(
+            child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: TextTable(text: lastColumn, color: Colors.white),
+        )),
+      ]);
+}
+
 class _RankingPageState extends State<RankingPage> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       child: Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: TextButton(
+                      onPressed: () {},
+                      style: const ButtonStyle(
+                        backgroundColor:
+                            WidgetStatePropertyAll<Color>(Colors.white),
+                      ),
+                      child: const Text(
+                        "Tempo",
+                        style: TextStyle(
+                            color: Color.fromRGBO(40, 44, 49, 1),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                          side: const BorderSide(
+                        color: Color.fromRGBO(40, 44, 49, 1),
+                        width: 5,
+                      )),
+                      child: const Text(
+                        "Pontuação",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              SizedBox(
+                width: 350,
+                child: Table(
+                  columnWidths: const {
+                    0: FlexColumnWidth(1.5),
+                    1: FlexColumnWidth(5),
+                    2: FlexColumnWidth(3)
+                  },
+                  children: [
+                    criarTitleTable("tempo"),
+                    criarLinhaTable("1", "Paulo Sergio", "53s"),
+                    criarLinhaTable("2", "Paulo Sergio", "53s"),
+                    criarLinhaTable("3", "Paulo Sergio", "53s"),
+                    criarLinhaTable("4", "Paulo Sergio", "53s"),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

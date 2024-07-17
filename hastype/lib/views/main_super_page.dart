@@ -27,6 +27,9 @@ class _MainSuperPageState extends State<MainSuperPage> {
 
   final homeController = HomeController();
 
+  String iconTabBar1Asset = "assets/images/home_enable.png";
+  String iconTabBar2Asset = "assets/images/ranking_desable.png";
+
   String errorMsg = "";
   bool errorIsVisible = false;
   bool loadingIsVisible = false;
@@ -35,8 +38,8 @@ class _MainSuperPageState extends State<MainSuperPage> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      child: Stack(
-        children: [Scaffold(
+      child: Stack(children: [
+        Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
@@ -52,13 +55,13 @@ class _MainSuperPageState extends State<MainSuperPage> {
                       setState(() {
                         loadingIsVisible = true;
                       });
-        
+
                       final response =
                           await homeController.logoutUser(sessionModel.userId);
-        
+
                       setState(() {
                         loadingIsVisible = false;
-        
+
                         if (homeController.superLogoutState ==
                             SuperLogoutStates.error) {
                           errorIsVisible = true;
@@ -81,76 +84,79 @@ class _MainSuperPageState extends State<MainSuperPage> {
             showSelectedLabels: false,
             showUnselectedLabels: false,
             onTap: (int index) {
+              if (index == 0) {
+                iconTabBar1Asset = "assets/images/home_enable.png";
+                iconTabBar2Asset = "assets/images/ranking_desable.png";
+              } else {
+                iconTabBar1Asset = "assets/images/home_desable.png";
+                iconTabBar2Asset = "assets/images/ranking_enable.png";
+              }
               setState(() {
                 _index = index;
               });
             },
             items: [
               BottomNavigationBarItem(
-                  icon: Image.asset('assets/images/home_enable.png'), label: ""),
+                  icon: Image.asset(iconTabBar1Asset), label: ""),
               BottomNavigationBarItem(
-                icon: Image.asset('assets/images/ranking_desable.png'),
+                icon: Image.asset(iconTabBar2Asset),
                 label: "",
               )
             ],
             backgroundColor: const Color.fromRGBO(44, 46, 49, 1),
           ),
-          
         ),
         Visibility(
-            visible: errorIsVisible,
-            child: SizedBox(
-              width: 400,
-              height: double.infinity,
-              child: Container(
-                color: const Color.fromARGB(171, 41, 41, 41),
-                alignment: Alignment.bottomCenter,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 150,
-                      child: Align(
-                        alignment: const FractionalOffset(0.9, 0.5),
-                        child: IconButton(
-                          icon: const Icon(Icons.close_rounded,
-                              color: Colors.white, size: 50),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FirstPage()));
-                          },
-                        ),
+          visible: errorIsVisible,
+          child: SizedBox(
+            width: 400,
+            height: double.infinity,
+            child: Container(
+              color: const Color.fromARGB(171, 41, 41, 41),
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    height: 150,
+                    child: Align(
+                      alignment: const FractionalOffset(0.9, 0.5),
+                      child: IconButton(
+                        icon: const Icon(Icons.close_rounded,
+                            color: Colors.white, size: 50),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FirstPage()));
+                        },
                       ),
                     ),
-                    Container(
-                      height: 100,
-                      color: const Color.fromARGB(255, 238, 99, 89),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              errorMsg,
-                              style: const TextStyle(
-                                  fontSize: 15, color: Colors.white),
-                            )
-                          ],
-                        ),
+                  ),
+                  Container(
+                    height: 100,
+                    color: const Color.fromARGB(255, 238, 99, 89),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            errorMsg,
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.white),
+                          )
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
-          LoadingComponent(isVisible: loadingIsVisible)
-        ]
-      ),
-      
+        ),
+        LoadingComponent(isVisible: loadingIsVisible)
+      ]),
     );
-    
   }
 }
