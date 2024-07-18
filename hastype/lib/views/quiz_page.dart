@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:hastype/components/button_default.dart';
 import 'package:hastype/components/input_box.dart';
 import 'package:hastype/components/text_default.dart';
+import 'package:hastype/components/time_format.dart';
 import 'package:hastype/data/controllers/quiz_controller.dart';
 import 'package:hastype/data/dtos/finish_quiz_dto.dart';
 import 'package:hastype/data/dtos/finish_quiz_response_dto.dart';
@@ -103,28 +104,10 @@ class _QuizPageState extends State<QuizPage> {
           hours++;
         }
       }
-      formatTimer();
+      setState(() {
+        timerFormated = TimeFormat().formatTimer(seconds, minutes, hours);
+      });
     }
-  }
-
-  formatTimer() {
-    String secondsFormated = "${seconds}s",
-        minutesFormated = "${minutes}min",
-        hoursFormated = "${hours}h";
-
-    if (seconds == 0) {
-      secondsFormated = "";
-    }
-    if (minutes == 0) {
-      minutesFormated = "";
-    }
-    if (hours == 0) {
-      hoursFormated = "";
-    }
-
-    setState(() {
-      timerFormated = "$hoursFormated$minutesFormated$secondsFormated";
-    });
   }
 
   setWordQuiz() {
@@ -159,8 +142,6 @@ class _QuizPageState extends State<QuizPage> {
     final resposta =
         "${quizInputController.text[0].toUpperCase()}${quizInputController.text.substring(1).toLowerCase()}"
             .trim();
-
-    print("Resposta: " + resposta.toString());
 
     final model = RespostaModel(palavraId: palavraId, resposta: resposta);
 

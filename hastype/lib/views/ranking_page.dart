@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hastype/components/text_table.dart';
+import 'package:hastype/components/time_format.dart';
 import 'package:hastype/data/controllers/ranking_controller.dart';
 
 class RankingPage extends StatefulWidget {
@@ -100,10 +101,18 @@ class _RankingPageState extends State<RankingPage> {
     return List.generate(
         listModels.length,
         (index) => createRowTable((index + 1).toString(),
-            listModels[index].userName, listModels[index].tempo.toString()));
+            listModels[index].userName, formatarTempo(listModels[index].tempo)));
   }
 
-  formatarTempo() {}
+  formatarTempo(int totalTime) {
+    int seconds = 0, minutes = 0, hours = 0;
+
+    seconds = totalTime % 60;
+    minutes = ((totalTime / 60) % 60).toInt();
+    hours = totalTime ~/ 3600;
+
+    return TimeFormat().formatTimer(seconds, minutes, hours);
+  }
 
   @override
   // ignore: override_on_non_overriding_member
