@@ -1,12 +1,160 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hastype/components/text_table.dart';
+import 'package:hastype/data/controllers/ranking_controller.dart';
+import 'package:hastype/models/ranking_tempo_model.dart';
 
 class RankingPage extends StatefulWidget {
-  const RankingPage({super.key});
+  const RankingPage(
+      {super.key, required this.showError, required this.setLoading});
+  final Function(String value) showError;
+  final Function(bool value) setLoading;
 
   @override
-  State<RankingPage> createState() => _RankingPageState();
+  State<RankingPage> createState() =>
+      _RankingPageState(showError: showError, setLoading: setLoading);
+}
+
+class _RankingPageState extends State<RankingPage> {
+  _RankingPageState({required this.showError, required this.setLoading});
+
+  final rankingController = RankingController();
+
+  final Function(String value) showError;
+  final Function(bool value) setLoading;
+
+  bool canLoadRanking = false;
+
+  late List<RankingTempoModel> listModels;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      tempoFetchApi();
+    });
+  }
+
+  tempoFetchApi() async {
+    widget.setLoading(true);
+
+    final response = await fetchRankingTempo(rankingController);
+
+    widget.setLoading(false);
+
+    setState(() {
+      if (rankingController.state == RankingStates.error) {
+        widget.showError(response.toString());
+        return;
+      }
+
+      canLoadRanking = true;
+      listModels = response;
+      return;
+    });
+  }
+
+  List<TableRow>_sucessResponse() {
+    if (!canLoadRanking) return [createEmptyRowTable()];
+    return List.generate(
+        listModels.length,
+        (index) => createRowTable((index + 1).toString(),
+            listModels[index].userName, listModels[index].tempo.toString()));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      width: 150,
+                      child: TextButton(
+                        onPressed: () {},
+                        style: const ButtonStyle(
+                          backgroundColor:
+                              WidgetStatePropertyAll<Color>(Colors.white),
+                        ),
+                        child: const Text(
+                          "Tempo",
+                          style: TextStyle(
+                              color: Color.fromRGBO(40, 44, 49, 1),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    SizedBox(
+                      height: 50,
+                      width: 150,
+                      child: TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                            side: const BorderSide(
+                          color: Color.fromRGBO(40, 44, 49, 1),
+                          width: 5,
+                        )),
+                        child: const Text(
+                          "Pontuação",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                SizedBox(
+                  width: 350,
+                  child: Table(
+                    columnWidths: const {
+                      0: FlexColumnWidth(1.5),
+                      1: FlexColumnWidth(5),
+                      2: FlexColumnWidth(3)
+                    },
+                    children: [
+                      createTitleTable("tempo"),
+                      createEmptyRowTable(),
+                      // ...List.generate(20,
+                      //     (index) => createRowTable(index.toString(), "Paulo Sergio", "53s"))
+                      ..._sucessResponse(),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Future fetchRankingTempo(RankingController controller) async {
+  return await controller.showRankingTempo();
+}
+
+Future fetchRankingPontuacao(RankingController controller) async {
+  return await controller.showRankingTempo();
 }
 
 TableRow createTitleTable(String tempoOrPontuacao) {
@@ -74,90 +222,4 @@ TableRow createEmptyRowTable() {
     TableCell(child: Padding(padding: EdgeInsets.all(15))),
     TableCell(child: Padding(padding: EdgeInsets.all(15))),
   ]);
-}
-
-class _RankingPageState extends State<RankingPage> {
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-          body: SingleChildScrollView(
-            child: Center(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 50,
-                        width: 150,
-                        child: TextButton(
-                          onPressed: () {},
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll<Color>(Colors.white),
-                          ),
-                          child: const Text(
-                            "Tempo",
-                            style: TextStyle(
-                                color: Color.fromRGBO(40, 44, 49, 1),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      SizedBox(
-                        height: 50,
-                        width: 150,
-                        child: TextButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                              side: const BorderSide(
-                            color: Color.fromRGBO(40, 44, 49, 1),
-                            width: 5,
-                          )),
-                          child: const Text(
-                            "Pontuação",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  SizedBox(
-                    width: 350,
-                    child: Table(
-                      columnWidths: const {
-                        0: FlexColumnWidth(1.5),
-                        1: FlexColumnWidth(5),
-                        2: FlexColumnWidth(3)
-                      },
-                      children: [
-                        createTitleTable("tempo"),
-                        createEmptyRowTable(),
-                        // ...List.generate(20,
-                        //     (index) => createRowTable(index.toString(), "Paulo Sergio", "53s"))
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-    );
-  }
 }

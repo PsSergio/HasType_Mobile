@@ -24,7 +24,6 @@ class UserRepository {
     )
     );
     return SessionModel.fromJson(response.data);
-    // needs to fix this return
   }
 
   Future<Response> logoutUser(String? userId) async{

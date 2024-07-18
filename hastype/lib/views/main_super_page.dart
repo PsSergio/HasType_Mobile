@@ -19,8 +19,6 @@ class _MainSuperPageState extends State<MainSuperPage> {
   _MainSuperPageState({required this.sessionModel});
   late final SessionModel sessionModel;
 
-  late final screens = [HomePage(sessionModel: sessionModel), RankingPage()];
-
   int _index = 0;
 
   final quizController = TextEditingController();
@@ -33,6 +31,27 @@ class _MainSuperPageState extends State<MainSuperPage> {
   String errorMsg = "";
   bool errorIsVisible = false;
   bool loadingIsVisible = false;
+
+  late final screens = [
+    HomePage(
+      sessionModel: sessionModel,
+      showError: showError, setLoading: setLoading,
+    ),
+    RankingPage(showError: showError, setLoading: setLoading,)
+  ];
+
+  showError(String value) {
+    setState(() {
+      errorIsVisible = true;
+      errorMsg = value;
+    });
+  }
+
+  setLoading(bool value){
+    setState(() {
+      loadingIsVisible = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

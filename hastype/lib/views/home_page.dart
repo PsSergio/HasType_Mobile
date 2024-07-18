@@ -6,27 +6,37 @@ import 'package:hastype/components/loading_component.dart';
 import 'package:hastype/data/controllers/home_controller.dart';
 import 'package:hastype/models/session_model.dart';
 import 'package:hastype/views/first_page.dart';
+import 'package:hastype/views/main_super_page.dart';
 import 'package:hastype/views/quiz_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.sessionModel});
+  const HomePage(
+      {super.key,
+      required this.sessionModel, required this.showError, required this.setLoading});
   final SessionModel sessionModel;
+  final Function(String value) showError;
+  final Function(bool value) setLoading;
 
   @override
-  State<HomePage> createState() => _HomePageState(sessionModel: sessionModel);
+  State<HomePage> createState() => _HomePageState(
+      sessionModel: sessionModel,
+      showError: showError,
+      setLoading: setLoading);
 }
 
 class _HomePageState extends State<HomePage> {
-  _HomePageState({required this.sessionModel});
+  _HomePageState( 
+      {required this.sessionModel,
+      required this.showError,
+      required this.setLoading});
 
   final quizController = TextEditingController();
 
   final homeController = HomeController();
   final SessionModel sessionModel;
 
-  String errorMsg = "";
-  bool errorIsVisible = false;
-  bool loadingIsVisible = false;
+  final Function(String value) showError;
+  final Function(bool value) setLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -115,20 +125,20 @@ class _HomePageState extends State<HomePage> {
                   ButtonDefault(
                       text: "Começar",
                       onPressed: () async {
-                        setState(() {
-                          loadingIsVisible = true;
-                        });
+                        widget.setLoading(true);
 
                         final response =
                             await homeController.preStartQuiz(sessionModel.id);
 
+                        widget.setLoading(false);
+
                         setState(() {
-                          loadingIsVisible = false;
 
                           if (homeController.preQuizState ==
                               PreQuizStates.error) {
-                            errorIsVisible = true;
-                            errorMsg = response.toString();
+                          
+                            widget.showError(response.toString());
+
                           } else {
                             Navigator.push(
                                 context,
@@ -143,7 +153,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          
         ],
       ),
     );
