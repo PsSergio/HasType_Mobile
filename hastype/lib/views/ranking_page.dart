@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hastype/components/text_table.dart';
 import 'package:hastype/data/controllers/ranking_controller.dart';
+import 'package:hastype/models/ranking_pontuacao_model.dart';
 import 'package:hastype/models/ranking_tempo_model.dart';
 
 class RankingPage extends StatefulWidget {
@@ -23,9 +24,10 @@ class _RankingPageState extends State<RankingPage> {
   final Function(String value) showError;
   final Function(bool value) setLoading;
 
-  bool canLoadRanking = false;
+  bool canLoadRankingTempo = false;
+  bool canLoadRankingPontuacao = false;
 
-  late List<RankingTempoModel> listModels;
+  List listModels = [];
 
   @override
   void initState() {
@@ -37,6 +39,11 @@ class _RankingPageState extends State<RankingPage> {
   }
 
   tempoFetchApi() async {
+    canLoadRankingPontuacao = false;
+    canLoadRankingTempo = false;
+
+    listModels.clear();
+
     widget.setLoading(true);
 
     final response = await fetchRankingTempo(rankingController);
@@ -49,21 +56,65 @@ class _RankingPageState extends State<RankingPage> {
         return;
       }
 
-      canLoadRanking = true;
+      canLoadRankingTempo = true;
       listModels = response;
       return;
     });
   }
 
-  List<TableRow>_sucessResponse() {
-    if (!canLoadRanking) return [createEmptyRowTable()];
+  pontuacaoFetchApi() async {
+    canLoadRankingPontuacao = false;
+    canLoadRankingTempo = false;
+
+    listModels.clear();
+
+    widget.setLoading(true);
+
+    final response = await fetchRankingPontuacao(rankingController);
+
+    widget.setLoading(false);
+
+    setState(() {
+      if (rankingController.state == RankingStates.error) {
+        widget.showError(response.toString());
+        return;
+      }
+
+      canLoadRankingPontuacao = true;
+      listModels = response;
+      return;
+    });
+  }
+
+  List<TableRow> _sucessResponse() {
+    if (!canLoadRankingPontuacao && !canLoadRankingTempo)
+      return [createEmptyRowTable()];
+
+    if (canLoadRankingPontuacao) {
+      return List.generate(
+          listModels.length,
+          (index) => createRowTable(
+              (index + 1).toString(),
+              listModels[index].userName,
+              listModels[index].pontuacao.toString()));
+    }
+
     return List.generate(
         listModels.length,
         (index) => createRowTable((index + 1).toString(),
             listModels[index].userName, listModels[index].tempo.toString()));
   }
 
+  formatarTempo() {}
+
   @override
+  Color backgroundColorButton1 = Colors.white;
+  Color backgroundColorButton2 = Colors.transparent;
+  Color textColorButton2 = Colors.white;
+  Color textColorButton1 = Color.fromRGBO(40, 44, 49, 1);
+
+  double widthButton1 = 0;
+  double widthButton2 = 5;
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
@@ -82,15 +133,27 @@ class _RankingPageState extends State<RankingPage> {
                       height: 50,
                       width: 150,
                       child: TextButton(
-                        onPressed: () {},
-                        style: const ButtonStyle(
-                          backgroundColor:
-                              WidgetStatePropertyAll<Color>(Colors.white),
-                        ),
-                        child: const Text(
+                        onPressed: () {
+                          backgroundColorButton1 = Colors.white;
+                          backgroundColorButton2 = Colors.transparent;
+
+                          textColorButton2 = Colors.white;
+                          textColorButton1 = Color.fromRGBO(40, 44, 49, 1);
+
+                          widthButton2 = 5;
+                          widthButton1 = 0;
+                          tempoFetchApi();
+                        },
+                        style: TextButton.styleFrom(
+                            backgroundColor: backgroundColorButton1,
+                            side: BorderSide(
+                              color: const Color.fromRGBO(40, 44, 49, 1),
+                              width: widthButton1,
+                            )),
+                        child: Text(
                           "Tempo",
                           style: TextStyle(
-                              color: Color.fromRGBO(40, 44, 49, 1),
+                              color: textColorButton1,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),
@@ -103,16 +166,27 @@ class _RankingPageState extends State<RankingPage> {
                       height: 50,
                       width: 150,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          backgroundColorButton2 = Colors.white;
+                          backgroundColorButton1 = Colors.transparent;
+
+                          textColorButton1 = Colors.white;
+                          textColorButton2 = Color.fromRGBO(40, 44, 49, 1);
+
+                          widthButton1 = 5;
+                          widthButton2 = 0;
+                          pontuacaoFetchApi();
+                        },
                         style: TextButton.styleFrom(
-                            side: const BorderSide(
-                          color: Color.fromRGBO(40, 44, 49, 1),
-                          width: 5,
-                        )),
-                        child: const Text(
+                            backgroundColor: backgroundColorButton2,
+                            side: BorderSide(
+                              color: const Color.fromRGBO(40, 44, 49, 1),
+                              width: widthButton2,
+                            )),
+                        child: Text(
                           "Pontuação",
                           style: TextStyle(
-                              color: Colors.white,
+                              color: textColorButton2,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),
@@ -154,7 +228,7 @@ Future fetchRankingTempo(RankingController controller) async {
 }
 
 Future fetchRankingPontuacao(RankingController controller) async {
-  return await controller.showRankingTempo();
+  return await controller.showRankingPontuacao();
 }
 
 TableRow createTitleTable(String tempoOrPontuacao) {
