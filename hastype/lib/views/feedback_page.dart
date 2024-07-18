@@ -4,7 +4,6 @@ import 'package:hastype/components/dark_button_default.dart';
 import 'package:hastype/components/text_default.dart';
 import 'package:hastype/data/dtos/finish_quiz_response_dto.dart';
 import 'package:hastype/models/session_model.dart';
-import 'package:hastype/views/home_page.dart';
 import 'package:hastype/views/main_super_page.dart';
 
 class FeedbackPage extends StatefulWidget {

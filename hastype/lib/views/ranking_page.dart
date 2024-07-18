@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hastype/components/text_table.dart';
 import 'package:hastype/data/controllers/ranking_controller.dart';
-import 'package:hastype/models/ranking_pontuacao_model.dart';
-import 'package:hastype/models/ranking_tempo_model.dart';
 
 class RankingPage extends StatefulWidget {
   const RankingPage(
@@ -108,6 +106,7 @@ class _RankingPageState extends State<RankingPage> {
   formatarTempo() {}
 
   @override
+  // ignore: override_on_non_overriding_member
   Color backgroundColorButton1 = Colors.white;
   Color backgroundColorButton2 = Colors.transparent;
   Color textColorButton2 = Colors.white;

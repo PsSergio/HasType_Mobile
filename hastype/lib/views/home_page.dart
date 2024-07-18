@@ -2,11 +2,8 @@ import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:hastype/components/button_default.dart';
 import 'package:hastype/components/input_box.dart';
-import 'package:hastype/components/loading_component.dart';
 import 'package:hastype/data/controllers/home_controller.dart';
 import 'package:hastype/models/session_model.dart';
-import 'package:hastype/views/first_page.dart';
-import 'package:hastype/views/main_super_page.dart';
 import 'package:hastype/views/quiz_page.dart';
 
 class HomePage extends StatefulWidget {

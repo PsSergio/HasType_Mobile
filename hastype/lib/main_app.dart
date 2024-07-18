@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hastype/models/session_model.dart';
-import 'package:hastype/views/cadastro_page.dart';
 import 'package:hastype/views/first_page.dart';
-import 'package:hastype/views/home_page.dart';
-import 'package:hastype/views/login_page.dart';
-import 'package:hastype/views/quiz_page.dart';
-
 class MainApp extends StatelessWidget{
   SessionModel tempModel = SessionModel(id: "73429a57-881f-4c4e-90cf-5f756e4cc7c5", userId: "32e90b47-c163-45cc-8ba0-b63ae4627c68");
   @override
