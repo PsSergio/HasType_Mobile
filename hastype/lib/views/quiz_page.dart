@@ -240,11 +240,11 @@ class _QuizPageState extends State<QuizPage> {
                           setWordQuiz();
                           quizInputController.text = "";
 
-                        } else {
+                        } else if (indexQuestion == 9){
                           jsonToSend = FinishQuizDto(
                               respostas: respostas); // get all answers
 
-                          FinishQuizResponseDto finishResponse =
+                          final finishResponse =
                               await quizController.finishQuiz(
                                   response.quiz.id, jsonToSend);
 

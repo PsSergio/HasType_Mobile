@@ -61,11 +61,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 ),
                 Column(
                   children: [
-                    ButtonDefault(text: "Ver Ranking", onPressed: () {}),
                     SizedBox(
                       height: 20,
                     ),
-                    DarkButtonDefault(
+                    ButtonDefault(
                         text: "Voltar",
                         onPressed: () {
                           Navigator.push(
